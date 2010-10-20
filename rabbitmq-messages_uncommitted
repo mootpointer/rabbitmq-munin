@@ -32,7 +32,7 @@ VHOST=${vhost:-"/"}
 QUEUE_EXCL=${queue_excl:-'^$'}
 QUEUES=$(rabbitmqctl list_queues -p $VHOST name | \
 		grep -v '^Listing' | grep -v "$QUEUE_EXCL" | \
-		grep -v 'done\.$' | sed -e 's/[\.\-=]/_/g' )
+		grep -v 'done\.$' | sed -e 's/[.-=]/_/g' )
  
 if [ "$1" = "config" ]; then
         QUEUE_WARN=${queue_warn:-10000}
