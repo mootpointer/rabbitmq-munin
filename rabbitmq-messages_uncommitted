@@ -29,7 +29,7 @@ fi
 # graphs should look. 
 
 VHOST=${vhost:-"/"}
-QUEUE_EXCL=${queue_excl:-''}
+QUEUE_EXCL=${queue_excl:-'^$'}
 QUEUES=$(rabbitmqctl list_queues -p $VHOST name | \
 		grep -v '^Listing' | grep -v "$QUEUE_EXCL" | \
 		grep -v 'done\.$' | sed -e 's/[\.\-=]/_/g' )
