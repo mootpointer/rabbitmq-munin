@@ -29,9 +29,10 @@ fi
 # graphs should look. 
 
 VHOST=${vhost:-"/"}
+QUEUE_EXCL=${queue_excl:-''}
 QUEUES=$(rabbitmqctl list_queues -p $VHOST name | \
-		grep -v '^Listing' | \
-		grep -v 'done\.$' | sed -e 's/[.-=]/_/g' )
+		grep -v '^Listing' | grep -v "$QUEUE_EXCL" | \
+		grep -v 'done\.$' | sed -e 's/[\.\-=]/_/g' )
  
 if [ "$1" = "config" ]; then
         QUEUE_WARN=${queue_warn:-10000}
@@ -70,5 +71,5 @@ fi
 # "value" subfield for every data field.
 
 rabbitmqctl list_queues -p $VHOST name messages_unacknowledged | \
-	grep -v "^Listing" | grep -v "done.$" | \
-    perl -nle'($q, $s) = split; $q =~ s/[.-=]/_/g; print("$q.value $s")'
+	grep -v "^Listing" | grep -v "done.$" | grep -v "$QUEUE_EXCL" | \
+    perl -nle'($q, $s) = split; $q =~ s/[\.\-=]/_/g; print("$q.value $s")'

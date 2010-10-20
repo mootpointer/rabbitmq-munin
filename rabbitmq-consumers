@@ -8,6 +8,7 @@
 #     env.vhost <AMQ virtual host>
 #     env.queue_warn <warning queuesize>
 #     env.queue_crit <critical queuesize>
+#     env.queue_excl <queue exclusion regex>
 #
 # Magic markers (optional - only used by munin-config and some
 # installation scripts):
@@ -29,9 +30,10 @@ fi
 # graphs should look. 
 
 VHOST=${vhost:-"/"}
+QUEUE_EXCL=${queue_excl:-''}
 QUEUES=$(rabbitmqctl list_queues -p $VHOST name | \
-		grep -v '^Listing' | \
-		grep -v 'done\.$' | sed -e 's/[.-=]/_/g' )
+		grep -v '^Listing' | grep -v "$QUEUE_EXCL" |\
+		grep -v 'done\.$' | sed -e 's/[\.\-=]/_/g' )
  
 if [ "$1" = "config" ]; then
         QUEUE_WARN=${queue_warn:-100}
@@ -70,5 +72,5 @@ fi
 # "value" subfield for every data field.
 
 rabbitmqctl list_queues -p $VHOST name consumers| \
-	grep -v "^Listing" | grep -v "done.$" | \
-    perl -nle'($q, $s) = split; $q =~ s/[.-=]/_/g; print("$q.value $s")'
+	grep -v "^Listing" | grep -v "done.$" | grep -v "$QUEUE_EXCL" | \
+    perl -nle'($q, $s) = split; $q =~ s/[\.\-=]/_/g; print("$q.value $s")'
