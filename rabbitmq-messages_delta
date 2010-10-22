@@ -58,7 +58,7 @@ if [ "$1" = "config" ]; then
 		echo "$queue.warning $QUEUE_WARN"
 		echo "$queue.critical $QUEUE_CRIT"
 		echo "$queue.info Queue size for $queue"
-		echo "$queue.type COUNTER"
+		echo "$queue.type DERIVE"
 	done
 
 	echo 'graph_info Lists how many messages are in each queue.'
